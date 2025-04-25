@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # База данных - PostgreSQL
+  database:
+    image: postgres:15
+    container_name: task-manager-db-dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=taskmanager
+    ports:
+      - "5432:5432"
+    networks:
+      - task-manager-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Бэкенд - NestJS в режиме разработки
+  backend:
+    image: node:18-alpine
+    container_name: task-manager-backend-dev
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "3001:3001"
+      - "9229:9229" # Порт для отладки
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=taskmanager
+    command: >
+      sh -c "npm install &&
+             npm install --save @nestjs/swagger swagger-ui-express class-validator class-transformer uuid reflect-metadata rxjs &&
+             npm install --save-dev @types/uuid &&
+             npm run start:dev"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - task-manager-network
+    restart: unless-stopped
+
+  # Фронтенд - React с Vite в режиме разработки
+  frontend:
+    image: node:18-alpine
+    container_name: task-manager-frontend-dev
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    command: >
+      sh -c "npm install &&
+             npm install --save axios react-toastify &&
+             npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - backend
+    networks:
+      - task-manager-network
+    restart: unless-stopped
+
+networks:
+  task-manager-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

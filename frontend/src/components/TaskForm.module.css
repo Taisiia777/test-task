@@ -1,0 +1,106 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.inputContainer {
+  display: flex;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.inputContainer:focus-within {
+  box-shadow: var(--shadow-lg), 0 0 0 2px var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.input {
+  flex: 1;
+  padding: 16px 20px;
+  border: none;
+  font-size: var(--font-size-md);
+  background: transparent;
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.addButton {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.addButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.4s;
+}
+
+.addButton:hover::before {
+  left: 100%;
+}
+
+.addButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px -2px rgba(99, 102, 241, 0.4);
+}
+
+.addButton:active {
+  transform: translateY(1px);
+}
+
+.errorMessage {
+  color: var(--error-color);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-top: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  animation: fadeIn var(--transition-normal);
+}
+
+.errorMessage::before {
+  content: '⚠️';
+  margin-right: var(--spacing-xs);
+}
+
+/* Adaptive mobile styles */
+@media (max-width: 480px) {
+  .inputContainer {
+    flex-direction: column;
+  }
+  
+  .addButton {
+    border-radius: 0;
+  }
+}

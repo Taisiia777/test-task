@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Зависимости
+node_modules
+npm-debug.log
+
+# Скомпилированный код
+/dist
+
+# Конфигурационные файлы
+.editorconfig
+.prettierrc
+.eslintrc.js
+
+# Тесты
+/test
+/coverage
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Логи
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Кэши
+.npm
+.eslintcache
